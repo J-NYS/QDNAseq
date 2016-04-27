@@ -1,0 +1,346 @@
+### R code from vignette source 'QDNAseq.Rnw'
+
+###################################################
+### code chunk number 1: QDNAseq.Rnw:22-23
+###################################################
+library(QDNAseq)
+
+
+###################################################
+### code chunk number 2: QDNAseq.Rnw:26-28
+###################################################
+options("QDNAseq::verbose"=NA)
+options(width=40)
+
+
+###################################################
+### code chunk number 3: QDNAseq.Rnw:65-77 (eval = FALSE)
+###################################################
+## readCounts <- binReadCounts(bins)
+## # all files ending in .bam from the current working directory
+## 
+## # or
+## 
+## readCounts <- binReadCounts(bins, bamfiles='tumor.bam')
+## # file 'tumor.bam' from the current working directory
+## 
+## # or
+## 
+## readCounts <- binReadCounts(bins, path='tumors')
+## # all files ending in .bam from the subdirectory 'tumors'
+
+
+###################################################
+### code chunk number 4: QDNAseq.Rnw:88-91
+###################################################
+data(LGG150)
+readCounts <- LGG150
+readCounts
+
+
+###################################################
+### code chunk number 5: QDNAseq.Rnw:97-98
+###################################################
+png("rawprofile.png")
+
+
+###################################################
+### code chunk number 6: rawprofile
+###################################################
+plot(readCounts, logTransform=FALSE, ylim=c(-50, 200))
+highlightFilters(readCounts, logTransform=FALSE,
+                 residual=TRUE, blacklist=TRUE)
+
+
+###################################################
+### code chunk number 7: QDNAseq.Rnw:105-106
+###################################################
+dev.off()
+
+
+###################################################
+### code chunk number 8: QDNAseq.Rnw:122-124
+###################################################
+readCountsFiltered <- applyFilters(readCounts,
+                                   residual=TRUE, blacklist=TRUE)
+
+
+###################################################
+### code chunk number 9: QDNAseq.Rnw:126-127
+###################################################
+png("isobar.png")
+
+
+###################################################
+### code chunk number 10: isobar
+###################################################
+isobarPlot(readCountsFiltered)
+
+
+###################################################
+### code chunk number 11: QDNAseq.Rnw:132-133
+###################################################
+dev.off()
+
+
+###################################################
+### code chunk number 12: QDNAseq.Rnw:151-152
+###################################################
+readCountsFiltered <- estimateCorrection(readCountsFiltered)
+
+
+###################################################
+### code chunk number 13: QDNAseq.Rnw:154-155
+###################################################
+png("noise.png")
+
+
+###################################################
+### code chunk number 14: noise
+###################################################
+noisePlot(readCountsFiltered)
+
+
+###################################################
+### code chunk number 15: QDNAseq.Rnw:160-161
+###################################################
+dev.off()
+
+
+###################################################
+### code chunk number 16: QDNAseq.Rnw:175-179
+###################################################
+copyNumbers <- correctBins(readCountsFiltered)
+copyNumbers
+copyNumbersNormalized <- normalizeBins(copyNumbers)
+copyNumbersSmooth <- smoothOutlierBins(copyNumbersNormalized)
+
+
+###################################################
+### code chunk number 17: QDNAseq.Rnw:181-182
+###################################################
+png("profile.png")
+
+
+###################################################
+### code chunk number 18: profile
+###################################################
+plot(copyNumbersSmooth)
+
+
+###################################################
+### code chunk number 19: QDNAseq.Rnw:187-188
+###################################################
+dev.off()
+
+
+###################################################
+### code chunk number 20: QDNAseq.Rnw:202-205 (eval = FALSE)
+###################################################
+## exportBins(copyNumbersSmooth, file="LGG150.txt")
+## exportBins(copyNumbersSmooth, file="LGG150.igv", format="igv")
+## exportBins(copyNumbersSmooth, file="LGG150.bed", format="bed")
+
+
+###################################################
+### code chunk number 21: QDNAseq.Rnw:217-219
+###################################################
+copyNumbersSegmented <- segmentBins(copyNumbersSmooth, transformFun="sqrt")
+copyNumbersSegmented <- normalizeSegmentedBins(copyNumbersSegmented)
+
+
+###################################################
+### code chunk number 22: QDNAseq.Rnw:221-222
+###################################################
+png("segments.png")
+
+
+###################################################
+### code chunk number 23: segments
+###################################################
+plot(copyNumbersSegmented)
+
+
+###################################################
+### code chunk number 24: QDNAseq.Rnw:227-228
+###################################################
+dev.off()
+
+
+###################################################
+### code chunk number 25: QDNAseq.Rnw:241-242
+###################################################
+copyNumbersCalled <- callBins(copyNumbersSegmented)
+
+
+###################################################
+### code chunk number 26: QDNAseq.Rnw:244-245
+###################################################
+png("calls.png")
+
+
+###################################################
+### code chunk number 27: calls
+###################################################
+plot(copyNumbersCalled)
+
+
+###################################################
+### code chunk number 28: QDNAseq.Rnw:250-251
+###################################################
+dev.off()
+
+
+###################################################
+### code chunk number 29: QDNAseq.Rnw:264-266
+###################################################
+cgh <- makeCgh(copyNumbersCalled)
+cgh
+
+
+###################################################
+### code chunk number 30: QDNAseq.Rnw:296-301 (eval = FALSE)
+###################################################
+## readCounts <- binReadCounts(getBinAnnotations(15))
+## readCounts <- applyFilters(readCounts)
+## readCounts <- estimateCorrection(readCounts)
+## readCounts <- applyFilters(readCounts, chromosomes=NA)
+## copyNumbers <- correctBins(readCounts)
+
+
+###################################################
+### code chunk number 31: QDNAseq.Rnw:316-318 (eval = FALSE)
+###################################################
+## readCounts <- estimateCorrection(readCounts,
+##   control=loess.control(surface="direct"))
+
+
+###################################################
+### code chunk number 32: QDNAseq.Rnw:332-342 (eval = FALSE)
+###################################################
+## # load required packages for human reference genome build hg19
+## library(QDNAseq)
+## library(Biobase)
+## library(BSgenome.Hsapiens.UCSC.hg19)
+## 
+## # set the bin size
+## binSize <- 15
+## 
+## # create bins from the reference genome
+## bins <- createBins(bsgenome=BSgenome.Hsapiens.UCSC.hg19, binSize=binSize)
+
+
+###################################################
+### code chunk number 33: QDNAseq.Rnw:359-363 (eval = FALSE)
+###################################################
+## # calculate mappabilites per bin from ENCODE mapability tracks
+## bins$mappability <- calculateMappability(bins,
+##   bigWigFile='/path/to/wgEncodeCrgMapabilityAlign50mer.bigWig',
+##   bigWigAverageOverBed='/path/to/bigWigAverageOverBed')
+
+
+###################################################
+### code chunk number 34: QDNAseq.Rnw:375-379 (eval = FALSE)
+###################################################
+## # calculate overlap with ENCODE blacklisted regions
+## bins$blacklist <- calculateBlacklist(bins,
+##   bedFiles=c('/path/to/wgEncodeDacMapabilityConsensusExcludable.bed',
+##   '/path/to/wgEncodeDukeMapabilityRegionsExcludable.bed'))
+
+
+###################################################
+### code chunk number 35: QDNAseq.Rnw:387-393 (eval = FALSE)
+###################################################
+## # load data for the 1000 Genomes (or similar) data set, and generate residuals
+## ctrl <- binReadCounts(bins,
+##   path='/path/to/control-set/bam/files')
+## ctrl <- applyFilters(ctrl, residual=FALSE, blacklist=FALSE,
+##   mappability=FALSE, bases=FALSE)
+## bins$residual <- iterateResiduals(ctrl)
+
+
+###################################################
+### code chunk number 36: QDNAseq.Rnw:402-405 (eval = FALSE)
+###################################################
+## # by default, use all autosomal bins that have a reference sequence
+## # (i.e. not only N's)
+## bins$use <- bins$chromosome %in% as.character(1:22) & bins$bases > 0
+
+
+###################################################
+### code chunk number 37: QDNAseq.Rnw:411-424 (eval = FALSE)
+###################################################
+## # convert to AnnotatedDataFrame and add metadata
+## bins <- AnnotatedDataFrame(bins,
+##   varMetadata=data.frame(labelDescription=c(
+##   'Chromosome name',
+##   'Base pair start position',
+##   'Base pair end position',
+##   'Percentage of non-N nucleotides (of full bin size)',
+##   'Percentage of C and G nucleotides (of non-N nucleotides)',
+##   'Average mappability of 50mers with a maximum of 2 mismatches',
+##   'Percent overlap with ENCODE blacklisted regions',
+##   'Median loess residual from 1000 Genomes (50mers)',
+##   'Whether the bin should be used in subsequent analysis steps'),
+##   row.names=colnames(bins)))
+
+
+###################################################
+### code chunk number 38: QDNAseq.Rnw:430-441 (eval = FALSE)
+###################################################
+## attr(bins, "QDNAseq") <- list(
+##   author="Ilari Scheinin",
+##   date=Sys.time(),
+##   organism="Hsapiens",
+##   build="hg19",
+##   version=packageVersion("QDNAseq"),
+##   url=paste0(
+##   "http://cdn.bitbucket.org/ccagc/qdnaseq/downloads/QDNAseq.hg19.",
+##   binsize, "kbp.SR50.rds"),
+##   md5=digest::digest(bins@data),
+##   sessionInfo=sessionInfo())
+
+
+###################################################
+### code chunk number 39: QDNAseq.Rnw:451-484 (eval = FALSE)
+###################################################
+## # download table of samples
+## server <- "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/"
+## g1k <- read.table(paste0(server, "sequence.index"),
+##   header=TRUE, sep="\t", as.is=TRUE, fill=TRUE)
+## 
+## # keep cases that are Illumina, low coverage, single-read, and not withdrawn
+## g1k <- g1k[g1k$INSTRUMENT_PLATFORM == 'ILLUMINA', ]
+## g1k <- g1k[g1k$ANALYSIS_GROUP == 'low coverage', ]
+## g1k <- g1k[g1k$LIBRARY_LAYOUT == 'SINGLE', ]
+## g1k <- g1k[g1k$WITHDRAWN == 0, ]
+## 
+## # keep cases with read lengths of at least 50 bp
+## g1k <- g1k[!g1k$BASE_COUNT %in% c("not available", ""), ]
+## g1k$BASE_COUNT <- as.numeric(g1k$BASE_COUNT)
+## g1k$READ_COUNT <- as.integer(g1k$READ_COUNT)
+## g1k$readLength <- g1k$BASE_COUNT / g1k$READ_COUNT
+## g1k <- g1k[g1k$readLength > 50, ]
+## 
+## # keep samples with a minimum of one million reads
+## readCountPerSample <- aggregate(g1k$READ_COUNT,
+##   by=list(sample=g1k$SAMPLE_NAME), sum)
+## g1k <- g1k[g1k$SAMPLE_NAME %in%
+##   readCountPerSample$sample[readCountPerSample$x >= 1e6], ]
+## 
+## g1k$fileName <- basename(g1k$FASTQ_FILE)
+## 
+## # download fastq files
+## for (i in rownames(g1k)) {
+##   sourceFile <- paste0(server, g1k[i, "FASTQ_FILE"])
+##   destFile <- g1k[i, "fileName"]
+##   if (!file.exists(destFile))
+##     download.file(sourceFile, destFile)
+## }
+
+
+###################################################
+### code chunk number 40: QDNAseq.Rnw:498-499
+###################################################
+sessionInfo()
+
