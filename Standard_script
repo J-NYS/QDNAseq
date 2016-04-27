@@ -1,0 +1,12 @@
+#Initiation
+library(QDNAseq)
+options("QDNAseq::verbose"=NA)
+options(width=40)
+
+#Binsize & hg19
+bins <- getBinAnnotations(binSize=15)
+
+#Read file
+setwd("D:/")
+readCounts <- binReadCounts(bins, bamfiles='482_IonXpress_010_rawlib.bam')
+setwd("C:/Users/jens/OneDrive/Howest/Bio-Informatica-BaNaBa/Stage/CMG/QDNAseq/QDNAseq_Output-test")
