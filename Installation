@@ -1,1 +1,47 @@
 Libraries and packages
+Make sure you install these libraries and packages
+
+#...
+library(BSgenome)
+
+#...
+library(matrixStats)
+
+#rtracklayer
+#R interface to genome browsers and their annotation tracks
+source("http://bioconductor.org/biocLite.R")
+biocLite("rtracklayer")
+
+#CGHregions
+#Dimension Reduction for Array CGH Data with Minimal Information Loss.
+source("https://bioconductor.org/biocLite.R")
+biocLite("CGHregions")
+
+#Installation QDNAseq
+source("https://bioconductor.org/biocLite.R")
+biocLite("QDNAseq")
+library(QDNAseq)
+
+#Downloading bin annotations for genome hg19, bin size 15kbp, and experiment type SR50 ...
+source("https://bioconductor.org/biocLite.R")
+biocLite('QDNAseq.hg19')
+
+#Biobase 
+#contains standardized data structures to represent genomic data.
+source("https://bioconductor.org/biocLite.R")
+biocLite("Biobase")
+library(Biobase)
+
+#Other build then hg19
+#Example: Full genome sequences for Homo sapiens (UCSC version hg19)
+source("https://bioconductor.org/biocLite.R")
+biocLite("BSgenome.Hsapiens.UCSC.hg19")
+library(BSgenome)
+#OR
+source("https://bioconductor.org/biocLite.R")
+biocLite("BSgenome")
+library(BSgenome)
+
+=> Now you can start!
+bins <- getBinAnnotations(binSize=15)
+# Go to the other files
