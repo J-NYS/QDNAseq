@@ -1,12 +1,76 @@
-#Initiation
+###################################################
+### Initiation
+###################################################
 library(QDNAseq)
 options("QDNAseq::verbose"=NA)
 options(width=40)
 
-#Binsize & hg19
+### Binsize & hg19
 bins <- getBinAnnotations(binSize=15)
 
-#Read file
-setwd("D:/")
-readCounts <- binReadCounts(bins, bamfiles='482_IonXpress_010_rawlib.bam')
-setwd("C:/Users/jens/OneDrive/Howest/Bio-Informatica-BaNaBa/Stage/CMG/QDNAseq/QDNAseq_Output-test")
+### Read file
+setwd("location .bam files")
+readCounts <- binReadCounts(bins, bamfiles='xxx.bam')
+setwd("location output")
+
+###################################################
+### Analyse .bam file and creating output
+###################################################
+
+### Rawprofile
+png("rawprofile_484-004_binsize1000.png")
+plot(readCounts, logTransform=FALSE, ylim=c(-50, 200))
+highlightFilters(readCounts, logTransform=FALSE,
+                 residual=TRUE, blacklist=TRUE)
+dev.off()
+
+### ...
+readCountsFiltered <- applyFilters(readCounts,
+                                   residual=TRUE, blacklist=TRUE)
+
+### Isobar
+png("isobar_484-004_binsize1000.png")
+isobarPlot(readCountsFiltered)
+dev.off()
+
+### ...
+readCountsFiltered <- estimateCorrection(readCountsFiltered)
+
+### Noise
+png("noise_484-004_binsize1000.png")
+noisePlot(readCountsFiltered)
+dev.off()
+
+### ...
+copyNumbers <- correctBins(readCountsFiltered)
+copyNumbers
+copyNumbersNormalized <- normalizeBins(copyNumbers)
+copyNumbersSmooth <- smoothOutlierBins(copyNumbersNormalized)
+
+### Profile
+png("profile_484-004_binsize1000.png")
+plot(copyNumbersSmooth)
+dev.off()
+
+### Export -> .txt/.igv/.bed
+## exportBins(copyNumbersSmooth, file="LGG150.txt")
+exportBins(copyNumbersSmooth, file="484_IonXpress_004_binsize1000_rawlib.igv", format="igv")
+exportBins(copyNumbersSmooth, file="484_IonXpress_004_binsize1000_rawlib.bed", format="bed")
+
+### ...
+copyNumbersSegmented <- segmentBins(copyNumbersSmooth, transformFun="sqrt")
+copyNumbersSegmented <- normalizeSegmentedBins(copyNumbersSegmented)
+
+### Segments
+png("segments_484-004_binsize1000.png")
+plot(copyNumbersSegmented)
+dev.off()
+
+### Calls (CGHregions)
+library(CGHregions)
+copyNumbersCalled <- callBins(copyNumbersSegmented)
+png("calls_484-004_binsize1000.png")
+plot(copyNumbersCalled)
+dev.off()
+cgh <- makeCgh(copyNumbersCalled)
+cgh
