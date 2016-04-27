@@ -1,6 +1,8 @@
 # QDNAseq
 CMGG
 
+! Code is written for R
+
 Under construction
 
 - Optimization binsize
