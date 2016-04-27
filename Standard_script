@@ -18,7 +18,7 @@ setwd("location output")
 ###################################################
 
 ### Rawprofile
-png("rawprofile_484-004_binsize1000.png")
+png("rawprofile_xxx.png")
 plot(readCounts, logTransform=FALSE, ylim=c(-50, 200))
 highlightFilters(readCounts, logTransform=FALSE,
                  residual=TRUE, blacklist=TRUE)
@@ -29,7 +29,7 @@ readCountsFiltered <- applyFilters(readCounts,
                                    residual=TRUE, blacklist=TRUE)
 
 ### Isobar
-png("isobar_484-004_binsize1000.png")
+png("isobar_xxx.png")
 isobarPlot(readCountsFiltered)
 dev.off()
 
@@ -37,7 +37,7 @@ dev.off()
 readCountsFiltered <- estimateCorrection(readCountsFiltered)
 
 ### Noise
-png("noise_484-004_binsize1000.png")
+png("noise_xxx.png")
 noisePlot(readCountsFiltered)
 dev.off()
 
@@ -48,28 +48,28 @@ copyNumbersNormalized <- normalizeBins(copyNumbers)
 copyNumbersSmooth <- smoothOutlierBins(copyNumbersNormalized)
 
 ### Profile
-png("profile_484-004_binsize1000.png")
+png("profile_xxx.png")
 plot(copyNumbersSmooth)
 dev.off()
 
 ### Export -> .txt/.igv/.bed
-## exportBins(copyNumbersSmooth, file="LGG150.txt")
-exportBins(copyNumbersSmooth, file="484_IonXpress_004_binsize1000_rawlib.igv", format="igv")
-exportBins(copyNumbersSmooth, file="484_IonXpress_004_binsize1000_rawlib.bed", format="bed")
+exportBins(copyNumbersSmooth, file="xxx.txt")
+exportBins(copyNumbersSmooth, file="xxx.igv", format="igv")
+exportBins(copyNumbersSmooth, file="xxx.bed", format="bed")
 
 ### ...
 copyNumbersSegmented <- segmentBins(copyNumbersSmooth, transformFun="sqrt")
 copyNumbersSegmented <- normalizeSegmentedBins(copyNumbersSegmented)
 
 ### Segments
-png("segments_484-004_binsize1000.png")
+png("segments_xxx.png")
 plot(copyNumbersSegmented)
 dev.off()
 
 ### Calls (CGHregions)
 library(CGHregions)
 copyNumbersCalled <- callBins(copyNumbersSegmented)
-png("calls_484-004_binsize1000.png")
+png("calls_xxx.png")
 plot(copyNumbersCalled)
 dev.off()
 cgh <- makeCgh(copyNumbersCalled)
