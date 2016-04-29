@@ -1,0 +1,63 @@
+### R code from vignette source 'QDNAseq.Rnw' => MODIFIED
+### Initiation
+library(QDNAseq)
+bins <- getBinAnnotations(binSize=15)
+
+### Reading File(s)
+setwd("~/Fedora22_Windows10/CMG/QDNAseq")
+readCounts <- binReadCounts(bins, bamfiles='484_IonXpress_004_rawlib.bam')
+setwd("C:/Users/jens/OneDrive/Howest/Bio-Informatica-BaNaBa/Stage/CMG/QDNAseq/QDNAseq_Output-test")
+
+### Rawprofile
+png("rawprofile_484-004.png")
+plot(readCounts, logTransform=FALSE, ylim=c(-50, 200))
+highlightFilters(readCounts, logTransform=FALSE,
+                 residual=TRUE, blacklist=TRUE)
+dev.off()
+
+readCounts <- applyFilters(readCounts)
+
+### Isobar
+png("isobar_484-004.png")
+isobarPlot(readCounts)
+dev.off()
+
+readCounts <- estimateCorrection(readCounts)
+
+### Noise
+png("noise_484-004.png")
+noisePlot(readCounts)
+dev.off()
+
+readCounts <- applyFilters(readCounts, chromosomes=NA)
+copyNumbers <- correctBins(readCounts)
+copyNumbers
+copyNumbers <- normalizeBins(copyNumbers)
+copyNumbers <- smoothOutlierBins(copyNumbers)
+
+### Profile
+png("profile_484-004.png")
+plot(copyNumbers)
+dev.off()
+
+### Export -> .txt/.igv/.bed
+exportBins(copyNumbers, file="LGG150.txt")
+exportBins(copyNumbers, file="484_IonXpress_004_rawlib.igv", format="igv")
+exportBins(copyNumbers, file="484_IonXpress_004_rawlib.bed", format="bed")
+
+copyNumbers <- segmentBins(copyNumbers, transformFun="sqrt")
+copyNumbers <- normalizeSegmentedBins(copyNumbers)
+
+### Segments
+png("segments_484-004.png")
+plot(copyNumbers)
+dev.off()
+
+### Calls (CGHregions)
+library(CGHregions)
+copyNumbers <- callBins(copyNumbers)
+png("calls_484-004.png")
+plot(copyNumbers)
+dev.off()
+cgh <- makeCgh(copyNumbers)
+cgh
