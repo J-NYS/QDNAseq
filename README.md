@@ -9,3 +9,4 @@ Under construction
 - Add sex chromosomes
 
 => first see installation file
+=> Loading packages before using QDNAseq (see Loading_Packages)
