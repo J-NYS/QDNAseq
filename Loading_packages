@@ -1,0 +1,9 @@
+# version R 3.3.0
+# version bioconductor 3.3
+# version QDNAseq 4may2016
+
+library(BSgenome)
+library(matrixStats)
+library(CGHregions)
+library(QDNAseq)
+bins <- getBinAnnotations(binSize=15)
