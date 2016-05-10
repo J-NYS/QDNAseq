@@ -1,47 +1,109 @@
-Libraries and packages
-Make sure you install these libraries and packages
+# Quantitative DNA sequencing for chromosomal aberrations
+# R version 3.3.0
+  R.version
 
-#...
-library(BSgenome)
+#Libraries and packages
+#Make sure you install these libraries and packages
 
-#...
-library(matrixStats)
+#Update bioconductor
+  source("https://bioconductor.org/biocLite.R")
+  biocLite() # version 3.3
+  
+    # package ‘BiocGenerics’ successfully unpacked and MD5 sums checked
+    # package ‘S4Vectors’ successfully unpacked and MD5 sums checked
+    # package ‘DBI’ successfully unpacked and MD5 sums checked
+    # package ‘RSQLite’ successfully unpacked and MD5 sums checked
+    # package ‘Biobase’ successfully unpacked and MD5 sums checked
+    # package ‘IRanges’ successfully unpacked and MD5 sums checked
+    # package ‘AnnotationDbi’ successfully unpacked and MD5 sums checked
+    # package ‘survival’ successfully unpacked and MD5 sums checked
 
-#rtracklayer
+#BSgenome
+  source("https://bioconductor.org/biocLite.R")
+  biocLite("BSgenome")
+  
+    # package ‘lambda.r’ successfully unpacked and MD5 sums checked
+    # package ‘futile.options’ successfully unpacked and MD5 sums checked
+    # package ‘SummarizedExperiment’ successfully unpacked and MD5 sums checked
+    # package ‘futile.logger’ successfully unpacked and MD5 sums checked
+    # package ‘snow’ successfully unpacked and MD5 sums checked
+    # package ‘XML’ successfully unpacked and MD5 sums checked
+    # package ‘zlibbioc’ successfully unpacked and MD5 sums checked
+    # package ‘RCurl’ successfully unpacked and MD5 sums checked
+    # package ‘GenomicAlignments’ successfully unpacked and MD5 sums checked
+    # package ‘bitops’ successfully unpacked and MD5 sums checked
+    # package ‘BiocParallel’ successfully unpacked and MD5 sums checked
+    # package ‘GenomeInfoDb’ successfully unpacked and MD5 sums checked
+    # package ‘GenomicRanges’ successfully unpacked and MD5 sums checked
+    # package ‘Biostrings’ successfully unpacked and MD5 sums checked
+    # package ‘rtracklayer’ successfully unpacked and MD5 sums checked
+    # package ‘XVector’ successfully unpacked and MD5 sums checked
+    # package ‘Rsamtools’ successfully unpacked and MD5 sums checked
+    # package ‘BSgenome’ successfully unpacked and MD5 sums checked
+
+  library(BSgenome)
+  
+#matrixStats
+  install.packages("matrixStats")
+  library(matrixStats)
+
+#rtracklayer (no need to install, part of BSgenome)
 #R interface to genome browsers and their annotation tracks
 source("http://bioconductor.org/biocLite.R")
 biocLite("rtracklayer")
 
 #CGHregions
 #Dimension Reduction for Array CGH Data with Minimal Information Loss.
-source("https://bioconductor.org/biocLite.R")
-biocLite("CGHregions")
+  source("https://bioconductor.org/biocLite.R")
+  biocLite("CGHregions")
+
+    # package ‘limma’ successfully unpacked and MD5 sums checked
+    # package ‘marray’ successfully unpacked and MD5 sums checked
+    # package ‘CGHbase’ successfully unpacked and MD5 sums checked
+    # package ‘CGHregions’ successfully unpacked and MD5 sums checked
+  
+  library(CGHregions)
 
 #Installation QDNAseq
-source("https://bioconductor.org/biocLite.R")
-biocLite("QDNAseq")
-library(QDNAseq)
+  source("https://bioconductor.org/biocLite.R")
+  biocLite("QDNAseq")
+  
+    # package ‘impute’ successfully unpacked and MD5 sums checked
+    # package ‘snowfall’ successfully unpacked and MD5 sums checked
+    # package ‘R.oo’ successfully unpacked and MD5 sums checked
+    # package ‘R.methodsS3’ successfully unpacked and MD5 sums checked
+    # package ‘CGHcall’ successfully unpacked and MD5 sums checked
+    # package ‘DNAcopy’ successfully unpacked and MD5 sums checked
+    # package ‘R.utils’ successfully unpacked and MD5 sums checked
+    # package ‘QDNAseq’ successfully unpacked and MD5 sums checked
+  
+  library(QDNAseq)
+  browseVignettes("QDNAseq") #version: 4may2016
 
 #Downloading bin annotations for genome hg19, bin size 15kbp, and experiment type SR50 ...
-source("https://bioconductor.org/biocLite.R")
-biocLite('QDNAseq.hg19')
+  source("https://bioconductor.org/biocLite.R")
+  biocLite('QDNAseq.hg19')
 
-#Biobase 
+#Biobase (no need to install, standard package bioconductor)
 #contains standardized data structures to represent genomic data.
-source("https://bioconductor.org/biocLite.R")
-biocLite("Biobase")
-library(Biobase)
+  source("https://bioconductor.org/biocLite.R")
+  biocLite("Biobase")
+  library(Biobase)
 
 #Other build then hg19
 #Example: Full genome sequences for Homo sapiens (UCSC version hg19)
-source("https://bioconductor.org/biocLite.R")
-biocLite("BSgenome.Hsapiens.UCSC.hg19")
-library(BSgenome)
+  source("https://bioconductor.org/biocLite.R")
+  biocLite("BSgenome.Hsapiens.UCSC.hg19")
+  library(BSgenome)
 #OR
-source("https://bioconductor.org/biocLite.R")
-biocLite("BSgenome")
-library(BSgenome)
+  source("https://bioconductor.org/biocLite.R")
+  biocLite("BSgenome")
+  library(BSgenome)
 
 # => Now you can start!
-bins <- getBinAnnotations(binSize=15)
+  #Downloading bin annotations for genome hg19, bin size 15kbp, and experiment type SR50 ...
+  source("https://bioconductor.org/biocLite.R")
+  biocLite('QDNAseq.hg19')
+  bins <- getBinAnnotations(binSize=15)
+  
 # Go to the other files
