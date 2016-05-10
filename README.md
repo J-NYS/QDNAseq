@@ -8,5 +8,4 @@ Under construction
 - Optimization binsize
 - Add sex chromosomes
 
-=> first see installation file
-=> Loading packages before using QDNAseq (see Loading_Packages)
+=> first see installation file=> Loading packages before using QDNAseq (see Loading_Packages)
